@@ -1,0 +1,86 @@
+/*
+1 ) CREATE A VIEW EMP_SAL_DETAILS TO GET EID NAME DOJ DEPT DESI SALARY  AS BASIC. 
+ALSO CALCULATE HRA (15% OF BASIC), PF (9% OF BASIC),  NET(BASIC+HRA+PF), GROSS(NET-PF).
+
+*/
+
+USE Assignments;
+
+SELECT * FROM EmployeeSalary
+SELECT * FROM EMP_Salary
+
+CREATE VIEW EMP_SAL_DETAILS AS
+SELECT 
+	ES.EID,
+	ES.NAME,
+	ES.DOJ,
+	E.DEPT,
+	E.DESI,
+	E.SALARY as 'Basic_Salary',
+	E.SALARY*0.15 as 'HRA',
+	E.SALARY*0.09 as 'PF',
+	(E.SALARY+(E.SALARY*0.15)+(E.SALARY*0.09)) as 'NET_SALARY',
+	(E.SALARY+(E.SALARY*0.15)+(E.SALARY*0.09))-(E.SALARY*0.09) as 'GROSS_Salary'
+FROM EmployeeSalary ES
+JOIN EMP_Salary E
+ON E.EID=ES.EID
+
+Select * from EMP_SAL_DETAILS
+
+/*
+CREATE A VIEW TO DISPLAY EID,NAME, DOJ, DESI, DEPT OF ALL THE
+MANAGERS JOINED IN 2019.
+*/
+
+CREATE VIEW MANAGERS_Of_2019 AS
+SELECT 
+	ES.EID,
+	ES.NAME, 
+	ES.DOJ, 
+	E.DESI, 
+	E.DEPT
+FROM
+	EmployeeSalary ES
+JOIN
+	EMP_Salary E
+ON 
+	E.EID=ES.EID
+WHERE
+	E.DESI = 'Manager' 
+and
+	year(DOJ) = 2019
+
+Select * from MANAGERS_Of_2019
+
+/*
+IN THE INVENTORY STRUCTURE GENERATE A VIEW BILL. IT SHOULD DISPLAY  OID,ODATE,CNAME,ADDRESS,PHONE,PDESC, PRICE, OQTY, AMOUNT
+*/
+USE Projects;
+
+Select * From Customer
+Select * From Orders
+Select * From Product
+Select * From Stock
+Select * From Supplier
+
+CREATE VIEW BILL as
+Select
+	O.OID,
+	O.ODATE,
+	C.CNAME,
+	C.ADDRESS,
+	C.PHONE,
+	P.PDESC, 
+	P.PRICE, 
+	O.OQTY, 
+	O.Oqty*P.Price as 'Amount'
+From Customer C
+JOIN 
+	Orders O
+ON
+	O.CID = C.CID
+JOIN Product P
+ON
+	P.PID=O.PID
+
+Select * from BILL
